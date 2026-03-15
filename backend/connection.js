@@ -1,15 +1,30 @@
+// const mongoose = require('mongoose');
+// require('dotenv').config();
+// const url = process.env.MONGO_URI;
+
+// // const url='mongodb://localhost:27017/CareLinkHub'
+
+// // asynchronous function - Promise object
+// mongoose.connect(url)
+// .then((result) => {
+//     console.log('database connected');
+    
+// }).catch((err) => {
+//     console.log(err);
+// });
+
+// module.exports = mongoose;
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const url="REMOVED@shreya.gtjvu.mongodb.net/MediLink?retryWrites=true&w=majority&appName=Shreya";
-
-// const url='mongodb://localhost:27017/CareLinkHub'
+const url = process.env.MONGO_URI;
 
 // asynchronous function - Promise object
 mongoose.connect(url)
-.then((result) => {
-    console.log('database connected');
-    
-}).catch((err) => {
+.then(() => {
+    console.log('database connected'); // ✅ correct
+})
+.catch((err) => {
     console.log(err);
 });
 
