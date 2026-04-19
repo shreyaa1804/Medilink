@@ -40,13 +40,25 @@ const Login = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-        <div className="p-8 flex flex-col justify-center w-full bg-white">
-          <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
-            Login to Your Account
-          </h2>
-          <form onSubmit={loginForm.handleSubmit} className="space-y-5">
+    <div className="min-h-screen relative flex items-center justify-center p-4 bg-[#0a0f1c] overflow-hidden">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-indigo-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-rose-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-[40%] left-[60%] w-[20rem] h-[20rem] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000" style={{ animationDelay: '4s' }}></div>
+
+      <div className="relative w-full max-w-md z-10">
+        {/* Glassmorphism Card */}
+        <div className="backdrop-blur-2xl bg-white/5 p-8 sm:p-10 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-white/10">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-extrabold text-white tracking-tight mb-2">
+              Welcome Back
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Sign in to continue to your dashboard.
+            </p>
+          </div>
+
+          <form onSubmit={loginForm.handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div className="relative group">
               <input
@@ -57,17 +69,17 @@ const Login = () => {
                 onBlur={loginForm.handleBlur}
                 value={loginForm.values.email}
                 placeholder=" "
-                className="peer block w-full appearance-none border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 transition-all duration-200"
+                className="peer w-full bg-black/20 text-white border border-white/10 rounded-2xl px-5 pt-7 pb-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 placeholder-transparent hover:bg-black/30"
               />
               <label
                 htmlFor="email"
-                className="absolute left-3 top-2.5 text-sm text-gray-500 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                className="absolute left-5 top-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-500 peer-placeholder-shown:normal-case peer-focus:top-3 peer-focus:text-[11px] peer-focus:text-indigo-400 peer-focus:uppercase"
               >
                 Email Address
               </label>
               {loginForm.touched.email && loginForm.errors.email && (
-                <p className="text-xs text-red-600 mt-1">
-                  {loginForm.errors.email}
+                <p className="text-xs text-rose-400 mt-2 flex items-center">
+                  <span className="mr-1">⚠</span> {loginForm.errors.email}
                 </p>
               )}
             </div>
@@ -82,54 +94,66 @@ const Login = () => {
                 onBlur={loginForm.handleBlur}
                 value={loginForm.values.password}
                 placeholder=" "
-                className="peer block w-full appearance-none border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 transition-all duration-200"
+                className="peer w-full bg-black/20 text-white border border-white/10 rounded-2xl px-5 pt-7 pb-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 placeholder-transparent hover:bg-black/30"
               />
               <label
                 htmlFor="password"
-                className="absolute left-3 top-2.5 text-sm text-gray-500 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                className="absolute left-5 top-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-500 peer-placeholder-shown:normal-case peer-focus:top-3 peer-focus:text-[11px] peer-focus:text-indigo-400 peer-focus:uppercase"
               >
                 Password
               </label>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors duration-200"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
               {loginForm.touched.password && loginForm.errors.password && (
-                <p className="text-xs text-red-600 mt-1">
-                  {loginForm.errors.password}
+                <p className="text-xs text-rose-400 mt-2 flex items-center">
+                  <span className="mr-1">⚠</span> {loginForm.errors.password}
                 </p>
               )}
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-between pt-2">
-              <button
-                type="submit"
-                className="w-28 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-              >
-                Login
-              </button>
+            <div className="flex items-center justify-between pt-2 px-1">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 bg-black/30 border-white/10 rounded text-indigo-500 focus:ring-indigo-500 focus:ring-offset-0 transition-colors"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-400 cursor-pointer hover:text-slate-300 transition-colors">
+                  Remember me
+                </label>
+              </div>
               <a
                 href="#"
-                className="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-all"
+                className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors hover:underline decoration-indigo-400/50 underline-offset-4"
               >
                 Forgot password?
               </a>
             </div>
+
+            <button
+              type="submit"
+              className="w-full py-4 mt-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 text-white rounded-2xl font-bold text-[15px] tracking-wide hover:opacity-90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(99,102,241,0.6)] active:scale-95"
+            >
+              Sign In
+            </button>
           </form>
 
           {/* Signup Link */}
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <p className="text-center text-sm text-gray-600">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-sm text-slate-400">
               Don't have an account?{' '}
               <a
                 href="signup"
-                className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-all"
+                className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-rose-400 hover:opacity-80 transition-opacity ml-1"
               >
-                Sign up now
+                Create one now
               </a>
             </p>
           </div>
