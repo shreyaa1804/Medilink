@@ -1,297 +1,235 @@
 "use client";
-import React from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Calendar, ShieldCheck, ArrowRight, Activity, HeartPulse } from "lucide-react";
 
-const features = [
-  {
-    title: "01",
-    content:
-      "Easily schedule appointments with your preferred doctors. Our platform offers real-time slot availability and user-friendly booking.",
-  },
-  {
-    title: "02",
-    content:
-      "Consult with expert doctors across various specializations. Get reliable healthcare advice, treatment plans, and follow-ups online or in-person.",
-  },
-  {
-    title: "03",
-    content:
-      "Make secure payments with our protected gateway. We ensure your data privacy and financial safety at every step.",
-  },
-];
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
 
 const About = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const tabs = [
+    {
+      id: 0,
+      title: "Easy Doctor Discovery",
+      description: "Find the right doctor for your needs. Our platform offers a comprehensive directory of healthcare professionals across various specialties.",
+      icon: <Search className="w-6 h-6" />,
+      image: "https://www.usnews.com/object/image/00000184-5d22-d253-a784-dda799cf0000/gettyimages-1390026192.jpg?update-time=1668009859280&size=responsive640"
+    },
+    {
+      id: 1,
+      title: "Hassle-Free Appointments",
+      description: "Book appointments with ease. Our platform offers a user-friendly interface for scheduling and managing your healthcare needs.",
+      icon: <Calendar className="w-6 h-6" />,
+      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop"
+    },
+    {
+      id: 2,
+      title: "Secure Payments",
+      description: "Make secure payments for your healthcare services. Our platform ensures that your financial information is protected at all times.",
+      icon: <ShieldCheck className="w-6 h-6" />,
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=2000&auto=format&fit=crop"
+    }
+  ];
+
   return (
-    <div className="bg-gray-100 py-16 px-4">
-      {/* Top Section */}
-      <>
-  {/* Hero */}
-  <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Grid */}
-    <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
-      <div className="lg:col-span-3">
-        <h1 className="block text-3xl font-bold text-gray-800 sm:text-4xl md:text-5xl lg:text-5xl dark:text-white">
-        About MediLink
-        </h1>
-        <p className="mt-3 text-lg text-gray-800 dark:text-neutral-400">
-        At MediLink, our mission is simple: to bring healthcare to your fingertips. We are a modern digital platform designed to connect patients with the right doctors quickly, efficiently, and securely. Whether you're seeking a consultation, choosing from specialized professionals, or managing appointment slots—MediLink makes it all seamless.
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-hidden font-sans pb-20">
+      {/* Decorative Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-[20%] right-[-5%] w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none" />
 
-We believe that healthcare should be accessible to everyone, and technology can make that possible. From urban areas to remote towns, our platform empowers users to find trusted healthcare providers in just a few clicks.
-        </p>
-        <div className="mt-5 lg:mt-8 flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
-          <div className="w-full sm:w-auto">
-            <label htmlFor="hero-input" className="sr-only">
-              Search
-            </label>
-           
+      {/* Hero Section */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 lg:pt-32 lg:pb-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          <motion.div 
+            initial="hidden" 
+            animate="visible" 
+            variants={staggerContainer}
+            className="max-w-2xl"
+          >
+            <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold mb-6 border border-blue-100 flex-shrink-0 shadow-sm">
+              <Activity className="w-4 h-4" />
+              <span>Digital Healthcare</span>
+            </motion.div>
+            
+            <motion.h1 
+              variants={fadeIn}
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight mb-6 leading-tight"
+            >
+              Healthcare at your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">fingertips</span>
+            </motion.h1>
+            
+            <motion.p 
+              variants={fadeIn}
+              className="text-lg sm:text-xl text-gray-600 mb-4 leading-relaxed"
+            >
+              At MediLink, our mission is simple: to bring healthcare to your fingertips. We are a modern digital platform designed to connect patients with the right doctors quickly, efficiently, and securely.
+            </motion.p>
+            
+            <motion.p 
+              variants={fadeIn}
+              className="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed"
+            >
+              Whether you're seeking a consultation, choosing from specialized professionals, or managing appointment slots—we make it all seamless.
+            </motion.p>
+            
+            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4">
+              <Link href="/book-appointment" className="group relative inline-flex justify-center items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-all duration-300 hover:scale-105 active:scale-95 border border-transparent">
+                <span className="relative z-10 flex items-center gap-2">
+                  Book Appointment
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-[150%] transition-transform duration-700" />
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative lg:ml-auto w-full max-w-lg mx-auto mt-12 lg:mt-0"
+          >
+            <div className="relative w-full aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl ring-1 ring-gray-900/10 z-10">
+              <img
+                src="https://d1zxene68j3keg.cloudfront.net/sites/default/files/Resouces/images/Doc%20Day_1.jpg"
+                alt="Healthcare Professional"
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent mix-blend-multiply" />
+            </div>
+            
+            {/* Decorative background for image */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-emerald-100 to-blue-100 rounded-[2rem] transform translate-x-4 translate-y-4 -z-10" />
+            
+            {/* Floating Card */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="absolute -bottom-6 -left-6 sm:bottom-12 sm:-left-12 bg-white/95 backdrop-blur-xl p-4 sm:p-5 rounded-2xl shadow-xl border border-white z-20"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shrink-0">
+                  <HeartPulse className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider">Trusted by</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">10k+ Patients</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Choose MediLink?</h2>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">Experience healthcare reimagined. We provide the tools you need to manage your medical journey efficiently and securely.</p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Tabs Navigation */}
+          <div className="lg:col-span-5 flex flex-col gap-4 relative z-10">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`text-left p-6 w-full rounded-2xl transition-all duration-300 border focus:outline-none ${
+                    isActive 
+                      ? "bg-white border-blue-100 shadow-xl shadow-blue-900/5 ring-1 ring-blue-50" 
+                      : "bg-transparent border-transparent hover:bg-white/60 hover:shadow-md"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`p-3 rounded-xl transition-colors duration-300 shadow-sm ${isActive ? "bg-blue-600 text-white shadow-blue-200" : "bg-white text-gray-500 border border-gray-100"}`}>
+                      {tab.icon}
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${isActive ? "text-gray-900" : "text-gray-700"}`}>
+                        {tab.title}
+                      </h3>
+                      <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? "text-gray-600" : "text-gray-500"}`}>
+                        {tab.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.button>
+              );
+            })}
           </div>
-          <a
-            className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-            href="/book-appointment"
-          >
-            Book Appointment
-          </a>
-        </div>
-        
-        {/* End Brands */}
-      </div>
-      {/* End Col */}
-      <div className="lg:col-span-4 mt-12 lg:mt-0">
-        <img
-          className="w-full rounded-xl"
-          src="https://d1zxene68j3keg.cloudfront.net/sites/default/files/Resouces/images/Doc%20Day_1.jpg"
-          alt="Hero Image"
-        />
-      </div>
-      {/* End Col */}
-    </div>
-    {/* End Grid */}
-  </div>
-  {/* End Hero */}
-</>
 
+          {/* Tab Content Image */}
+          <div className="lg:col-span-7 relative">
+            <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-emerald-50 rounded-[2.5rem] transform rotate-3 scale-105 opacity-50" />
+            <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl bg-gray-100 ring-1 ring-gray-900/5">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeTab}
+                  initial={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.95, filter: "blur(8px)" }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  src={tabs[activeTab].image}
+                  alt={tabs[activeTab].title}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
 
-      {/* Feature Cards */}
-      <>
-  {/* Features */}
-  <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-8 mx-auto">
-    <div className="relative p-6 md:p-16">
-      {/* Grid */}
-      <div className="relative z-10 lg:grid lg:grid-cols-12 lg:gap-16 lg:items-center">
-        <div className="mb-10 lg:mb-0 lg:col-span-6 lg:col-start-8 lg:order-2">
-          <h2 className="text-2xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200">
-          Why Choose MediLink?
-          </h2>
-          {/* Tab Navs */}
-          <nav
-            className="grid gap-4 mt-5 md:mt-10"
-            aria-label="Tabs"
-            role="tablist"
-            aria-orientation="vertical"
-          >
-            <button
-              type="button"
-              className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 active"
-              id="tabs-with-card-item-1"
-              aria-selected="true"
-              data-hs-tab="#tabs-with-card-1"
-              aria-controls="tabs-with-card-1"
-              role="tab"
-            >
-              <span className="flex gap-x-6">
-                <svg
-                  className="shrink-0 mt-2 size-6 md:size-7 hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" />
-                  <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" />
-                  <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" />
-                  <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" />
-                  <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" />
-                </svg>
-                <span className="grow">
-                  <span className="block text-lg font-semibold hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200">
-                  Easy Doctor Discovery
-                  </span>
-                  <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
-                    Find the right doctor for your needs. Our platform offers a comprehensive directory of healthcare professionals across various specialties.
-                  </span>
-                </span>
-              </span>
-            </button>
-            <button
-              type="button"
-              className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-              id="tabs-with-card-item-2"
-              aria-selected="false"
-              data-hs-tab="#tabs-with-card-2"
-              aria-controls="tabs-with-card-2"
-              role="tab"
-            >
-              <span className="flex gap-x-6">
-                <svg
-                  className="shrink-0 mt-2 size-6 md:size-7 hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="m12 14 4-4" />
-                  <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                </svg>
-                <span className="grow">
-                  <span className="block text-lg font-semibold hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200">
-                  Hassle-Free Appointments
-                  </span>
-                  <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
-                    Book appointments with ease. Our platform offers a user-friendly interface for scheduling and managing your healthcare needs.
-                  </span>
-                </span>
-              </span>
-            </button>
-            <button
-              type="button"
-              className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-              id="tabs-with-card-item-3"
-              aria-selected="false"
-              data-hs-tab="#tabs-with-card-3"
-              aria-controls="tabs-with-card-3"
-              role="tab"
-            >
-              <span className="flex gap-x-6">
-                <svg
-                  className="shrink-0 mt-2 size-6 md:size-7 hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-                  <path d="M5 3v4" />
-                  <path d="M19 17v4" />
-                  <path d="M3 5h4" />
-                  <path d="M17 19h4" />
-                </svg>
-                <span className="grow">
-                  <span className="block text-lg font-semibold hs-tab-active:text-blue-600 text-gray-800 dark:hs-tab-active:text-blue-500 dark:text-neutral-200">
-                    Secure Payments
-                  </span>
-                  <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
-                    Make secure payments for your healthcare services. Our platform ensures that your financial information is protected at all times.
-                  </span>
-                </span>
-              </span>
-            </button>
-          </nav>
-          {/* End Tab Navs */}
-        </div>
-        {/* End Col */}
-        <div className="lg:col-span-6">
-          <div className="relative">
-            {/* Tab Content */}
-            <div>
-              <div
-                id="tabs-with-card-1"
-                role="tabpanel"
-                aria-labelledby="tabs-with-card-item-1"
-              >
-                <img
-                  className="shadow-xl shadow-gray-200 rounded-xl dark:shadow-gray-900/20"
-                  src="https://www.usnews.com/object/image/00000184-5d22-d253-a784-dda799cf0000/gettyimages-1390026192.jpg?update-time=1668009859280&size=responsive640"
-                  alt="Features Image"
-                />
-              </div>
-              <div
-                id="tabs-with-card-2"
-                className="hidden"
-                role="tabpanel"
-                aria-labelledby="tabs-with-card-item-2"
-              >
-                <img
-                  className="shadow-xl shadow-gray-200 rounded-xl dark:shadow-gray-900/20"
-                  src="https://images.unsplash.com/photo-1665686306574-1ace09918530?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&h=720&q=80"
-                  alt="Features Image"
-                />
-              </div>
-              <div
-                id="tabs-with-card-3"
-                className="hidden"
-                role="tabpanel"
-                aria-labelledby="tabs-with-card-item-3"
-              >
-                <img
-                  className="shadow-xl shadow-gray-200 rounded-xl dark:shadow-gray-900/20"
-                  src="https://images.unsplash.com/photo-1598929213452-52d72f63e307?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&h=720&q=80"
-                  alt="Features Image"
-                />
+              {/* Decorative overlay element */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`text-${activeTab}`}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ delay: 0.2, duration: 0.4 }}
+                  >
+                    <h4 className="text-white text-2xl font-bold tracking-wide">{tabs[activeTab].title}</h4>
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
-            {/* End Tab Content */}
-            {/* SVG Element */}
-            <div className="hidden absolute top-0 end-0 translate-x-20 md:block lg:translate-x-20">
-              <svg
-                className="w-16 h-auto text-orange-500"
-                width={121}
-                height={135}
-                viewBox="0 0 121 135"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5 16.4754C11.7688 27.4499 21.2452 57.3224 5 89.0164"
-                  stroke="currentColor"
-                  strokeWidth={10}
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M33.6761 112.104C44.6984 98.1239 74.2618 57.6776 83.4821 5"
-                  stroke="currentColor"
-                  strokeWidth={10}
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M50.5525 130C68.2064 127.495 110.731 117.541 116 78.0874"
-                  stroke="currentColor"
-                  strokeWidth={10}
-                  strokeLinecap="round"
-                />
+            
+            {/* Abstract Decorative SVG */}
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-10 -right-10 hidden lg:block opacity-40 text-blue-300 pointer-events-none"
+            >
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 0L64.2954 44.5905L102.426 17.5736L72.1932 54.8015L116.326 60L72.1932 65.1985L102.426 102.426L64.2954 75.4095L60 120L55.7046 75.4095L17.5736 102.426L47.8068 65.1985L3.67389 60L47.8068 54.8015L17.5736 17.5736L55.7046 44.5905L60 0Z" fill="currentColor"/>
               </svg>
-            </div>
-            {/* End SVG Element */}
+            </motion.div>
           </div>
         </div>
-        {/* End Col */}
       </div>
-      {/* End Grid */}
-      {/* Background Color */}
-      <div className="absolute inset-0 grid grid-cols-12 size-full">
-        <div className="col-span-full lg:col-span-7 lg:col-start-6 bg-gray-100 w-full h-5/6 rounded-xl sm:h-3/4 lg:h-full dark:bg-neutral-800" />
-      </div>
-      {/* End Background Color */}
-    </div>
-  </div>
-  {/* End Features */}
-</>
-
     </div>
   );
 };

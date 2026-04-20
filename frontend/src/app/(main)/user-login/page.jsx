@@ -41,12 +41,35 @@ const Login = () => {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4 bg-[#0a0f1c] overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-indigo-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-rose-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-[40%] left-[60%] w-[20rem] h-[20rem] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse duration-1000" style={{ animationDelay: '4s' }}></div>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(40px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-blob {
+          animation: blob 7s infinite ease-in-out;
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0;
+        }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+      `}} />
 
-      <div className="relative w-full max-w-md z-10">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-indigo-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-rose-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+      <div className="absolute top-[40%] left-[60%] w-[20rem] h-[20rem] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
+
+      <div className="relative w-full max-w-md z-10 animate-fade-in-up">
         {/* Glassmorphism Card */}
         <div className="backdrop-blur-2xl bg-white/5 p-8 sm:p-10 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-white/10">
           <div className="mb-8 text-center">
