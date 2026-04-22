@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
+import { ShieldCheck, Mail, Lock, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Validation Schema
 const loginSchema = Yup.object().shape({
@@ -24,111 +26,133 @@ const Login = () => {
 
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('http://localhost:5000/doctor/authenticate', values);
-        alert('Login Success');
-        router.push('/doctor/manage-slot');
-        console.log(response);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/doctor/authenticate`, values);
+        toast.success('Login Successful');
         localStorage.setItem('token', response.data.token);
-        // localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem('doctor', JSON.stringify(response.data));
+        router.push('/doctor/doctor-dashboard');
       } catch (err) {
         console.log(err);
-        toast.error(err.response?.data?.message || 'An error occurred');
+        toast.error(err.response?.data?.message || 'Invalid credentials or server error');
       }
     },
     validationSchema: loginSchema,
   });
 
   return (
-    <div className="flex h-screen w-full bg-gradient-to-r from-blue-400 to-blue-600">
-      {/* Left Section with Info Text */}
-      <div className="w-1/2 flex flex-col justify-center px-10 text-white space-y-6 animate_animated animate_fadeInLeft">
-        <h1 className="text-5xl font-bold leading-tight">Welcome Back to MediLink</h1>
-        <p className="text-lg">
-          Log in to access your account and start connecting with patients. Keep track of your appointments, consults, and much more from your dashboard.
-        </p>
-        <ul className="list-disc space-y-2 ml-5 text-sm">
-          <li>Manage your schedule efficiently</li>
-          <li>Respond to patient queries instantly</li>
-          <li>Stay up-to-date with your medical records</li>
-        </ul>
+    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
+      {/* Left Section - Hero/Info */}
+      <div className="lg:w-1/2 bg-slate-900 p-12 lg:p-24 flex flex-col justify-center text-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-blue-500 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-emerald-500 rounded-full blur-[100px]"></div>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 space-y-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-blue-400 text-sm font-bold">
+            <ShieldCheck className="w-4 h-4" />
+            Healthcare Provider Portal
+          </div>
+          
+          <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
+            Advanced Care, <br />
+            <span className="text-blue-500">Simplified</span> Workflow.
+          </h1>
+          
+          <p className="text-slate-400 text-lg max-w-md leading-relaxed">
+            Welcome back, Doctor. MediLink provides you with the most advanced tools to manage appointments and connect with patients seamlessly.
+          </p>
+
+          <div className="grid grid-cols-2 gap-6 pt-8 border-t border-white/10">
+            <div>
+              <p className="text-3xl font-bold text-white">100k+</p>
+              <p className="text-slate-500 text-sm">Consultations Managed</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-white">99.9%</p>
+              <p className="text-slate-500 text-sm">Uptime for Providers</p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Right Section with Login Form */}
-      {/* Right Section with Login Form */}
-      <div className="w-1/2 flex justify-center items-center animate_animated animate_fadeInRight">
-        <form
-          onSubmit={loginForm.handleSubmit}
-          className="relative w-96 p-8 rounded-lg bg-white shadow-2xl transition-transform transform hover:scale-105 hover:shadow-lg duration-500 ease-in-out"
+      {/* Right Section - Login Form */}
+      <div className="lg:w-1/2 flex items-center justify-center p-8 bg-slate-50">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md"
         >
-          {/* Login Form Title */}
-          <h1 className="text-4xl font-bold text-blue-600 mb-4 text-center animate-pulse">Login</h1>
-          <p className="text-gray-500 mb-6 text-center">Log in to access your account</p>
+          <div className="bg-white p-10 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50">
+            <div className="mb-10">
+              <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Doctor Login</h2>
+              <p className="text-slate-500 mt-2 text-sm">Enter your credentials to manage your dashboard.</p>
+            </div>
 
+            <form onSubmit={loginForm.handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" htmlFor="email">Email Address</label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                  <input
+                    type="email"
+                    id="email"
+                    onChange={loginForm.handleChange}
+                    value={loginForm.values.email}
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border ${loginForm.touched.email && loginForm.errors.email ? 'border-rose-300' : 'border-slate-200'} bg-slate-50 focus:bg-white focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all outline-none text-slate-700 font-medium`}
+                    placeholder="name@clinic.com"
+                  />
+                </div>
+                {loginForm.touched.email && loginForm.errors.email && (
+                  <p className="text-[10px] text-rose-500 font-bold pl-1 uppercase tracking-tighter">{loginForm.errors.email}</p>
+                )}
+              </div>
 
+              <div className="space-y-2">
+                <div className="flex justify-between items-center pl-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest" htmlFor="password">Password</label>
+                  <a href="#" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">Forgot?</a>
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                  <input
+                    type="password"
+                    id="password"
+                    onChange={loginForm.handleChange}
+                    value={loginForm.values.password}
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border ${loginForm.touched.password && loginForm.errors.password ? 'border-rose-300' : 'border-slate-200'} bg-slate-50 focus:bg-white focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all outline-none text-slate-700 font-medium`}
+                    placeholder="••••••••"
+                  />
+                </div>
+                {loginForm.touched.password && loginForm.errors.password && (
+                  <p className="text-[10px] text-rose-500 font-bold pl-1 uppercase tracking-tighter">{loginForm.errors.password}</p>
+                )}
+              </div>
 
-          {/* Email Field */}
-          <div className="relative mb-6">
-            <input
-              type="text"
-              id="email"
-              onChange={loginForm.handleChange}
-              value={loginForm.values.email}
-              className="peer block w-full rounded-lg border border-gray-300 bg-transparent px-2.5 pt-4 pb-2.5 text-sm text-gray-900 placeholder-transparent focus:border-blue-600 focus:outline-none focus:ring-blue-500 transition duration-300"
-              placeholder="Enter Your Email"
-            />
-            <label
-              htmlFor="email"
-              className="absolute left-2 top-2 z-10 -translate-y-4 scale-75 transform cursor-text select-none bg-white px-2 text-sm text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:text-blue-600"
-            >
-              Enter Your Email
-            </label>
-            {loginForm.touched.email && loginForm.errors.email && (
-              <p className="text-xs text-red-600 mt-2">{loginForm.errors.email}</p>
-            )}
+              <button
+                type="submit"
+                className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+              >
+                Sign In
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </button>
+            </form>
+
+            <div className="mt-10 pt-10 border-t border-slate-100 text-center">
+              <p className="text-slate-500 text-sm">
+                New to MediLink? 
+                <a href="/doctor-signup" className="ml-2 font-bold text-slate-900 hover:text-blue-600 transition-colors">Apply as Provider</a>
+              </p>
+            </div>
           </div>
-
-          {/* Password Field */}
-          <div className="relative mb-6">
-            <input
-              type="password"
-              id="password"
-              onChange={loginForm.handleChange}
-              value={loginForm.values.password}
-              className="peer block w-full rounded-lg border border-gray-300 bg-transparent px-2.5 pt-4 pb-2.5 text-sm text-gray-900 placeholder-transparent focus:border-blue-600 focus:outline-none focus:ring-blue-500 transition duration-300"
-              placeholder="Enter Your Password"
-            />
-            <label
-              htmlFor="password"
-              className="absolute left-2 top-2 z-10 -translate-y-4 scale-75 transform cursor-text select-none bg-white px-2 text-sm text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:text-blue-600"
-            >
-              Enter Your Password
-            </label>
-            {loginForm.touched.password && loginForm.errors.password && (
-              <p className="text-xs text-red-600 mt-2">{loginForm.errors.password}</p>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-blue-600 py-3 text-white shadow-lg hover:bg-blue-500 hover:shadow-2xl hover:scale-105 transition-transform duration-300"
-          >
-            Login
-          </button>
-
-          <div className="mt-4 text-center">
-            <a href="#" className="text-sm font-medium text-gray-600 hover:underline">Forgot your password?</a>
-          </div>
-
-          <div className="mt-4 text-center">
-            <p className="text-gray-600">Don't have an account?
-              <a href="doctor-signup" className="ml-1 font-semibold text-blue-600 hover:underline">Sign up</a>
-            </p>
-          </div>
-        </form>
+        </motion.div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Login;
