@@ -1,24 +1,47 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import { FaSearch, FaStar, FaStethoscope, FaUserMd } from "react-icons/fa";
+import { 
+  Search, 
+  Star, 
+  Stethoscope,
+  ArrowRight,
+  TrendingUp,
+  Award,
+  DollarSign
+} from "lucide-react";
 
 const BrowseDoctors = () => {
   const runOnce = useRef(false);
   const [doctorList, setDoctorList] = useState([]);
   const [masterList, setMasterList] = useState([]);
-  const { doctor } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const specialties = [
+    "Cardiologist",
+    "Dermatologist",
+    "Pediatrician",
+    "Homopathy",
+    "Dentist",
+    "Pulmonologist",
+    "Neurologist",
+    "Orthopedic"
+  ];
 
   const fetchDoctors = async () => {
     try {
+      setLoading(true);
       const res = await axios.get("http://localhost:5000/doctor/getall");
       setDoctorList(res.data);
       setMasterList(res.data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,26 +52,23 @@ const BrowseDoctors = () => {
     }
   }, []);
 
-  const searchDoctor = (e) => {
-    const keyword = e.target.value.toLowerCase();
-    setDoctorList(
-      masterList.filter((doctor) =>
-        doctor.name.toLowerCase().includes(keyword)
-      )
-    );
-  };
-
-  const filterCategory = (specialization) => {
-    if (specialization === "") {
-      setDoctorList(masterList);
-      return;
+  useEffect(() => {
+    let filtered = masterList;
+    
+    if (selectedSpecialty) {
+      filtered = filtered.filter(doctor => 
+        doctor.specialization.toLowerCase().includes(selectedSpecialty.toLowerCase())
+      );
     }
-    setDoctorList(
-      masterList.filter((doctor) =>
-        doctor.specialization.toLowerCase().includes(specialization.toLowerCase())
-      )
-    );
-  };
+    
+    if (searchQuery) {
+      filtered = filtered.filter(doctor => 
+        doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    setDoctorList(filtered);
+  }, [selectedSpecialty, searchQuery, masterList]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,133 +86,226 @@ const BrowseDoctors = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5
+        duration: 0.5,
+        ease: "easeOut"
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
-      <motion.header 
-        className="relative w-full h-[40vh] bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="absolute inset-0 bg-[url('/api/placeholder/1920/400')] opacity-10 bg-cover bg-center" />
-        <div className="relative h-full max-w-6xl mx-auto px-6 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden pb-20">
+      {/* Decorative Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-[20%] right-[-5%] w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[10%] left-[20%] w-80 h-80 bg-purple-400/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold mb-6 border border-blue-100 shadow-sm"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Find Your Perfect Doctor
-            </h1>
-            <p className="text-xl md:text-2xl text-blue-100">
-              Expert Healthcare at Your Fingertips
-            </p>
+            <TrendingUp className="w-4 h-4" />
+            <span>Top Rated Professionals</span>
           </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6"
+          >
+            Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Ideal Doctor</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10"
+          >
+            Connect with verified healthcare experts across all specialties. 
+            Quality care is just a simple search away.
+          </motion.p>
         </div>
-      </motion.header>
+      </section>
 
       {/* Search & Filter Section */}
-      <div className="max-w-6xl mx-auto px-4 -mt-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 mb-16 relative z-10">
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl shadow-xl p-6 mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] shadow-2xl shadow-blue-900/5 border border-white p-4 md:p-8"
         >
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="flex flex-col gap-8">
+            {/* Search Input */}
+            <div className="relative group">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors w-6 h-6" />
               <input
                 type="text"
-                placeholder="Search doctors by name..."
-                onChange={searchDoctor}
-                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                placeholder="Search doctors by name, specialty, or hospital..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-16 pr-6 py-5 rounded-2xl bg-gray-50 border-none focus:ring-4 focus:ring-blue-100 transition-all text-lg placeholder:text-gray-400"
               />
             </div>
-            <select
-              onChange={(e) => filterCategory(e.target.value)}
-              className="py-4 px-6 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 cursor-pointer"
-            >
-              <option value="">All Specialties</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Pediatrician">Pediatrician</option>
-              <option value="Homopathy">Homopathy</option>
-              <option value="Dentist">Dentist</option>
-              <option value="Pulmonologist">Pulmonologist</option>
-            </select>
+
+            {/* Specialty Chips */}
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setSelectedSpecialty("")}
+                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 border ${
+                  selectedSpecialty === "" 
+                  ? "bg-blue-600 text-white border-transparent shadow-lg shadow-blue-200" 
+                  : "bg-white text-gray-600 border-gray-100 hover:border-blue-200"
+                }`}
+              >
+                All Specialties
+              </button>
+              {specialties.map((spec) => (
+                <button
+                  key={spec}
+                  onClick={() => setSelectedSpecialty(spec)}
+                  className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 border ${
+                    selectedSpecialty === spec 
+                    ? "bg-blue-600 text-white border-transparent shadow-lg shadow-blue-200" 
+                    : "bg-white text-gray-600 border-gray-100 hover:border-blue-200"
+                  }`}
+                >
+                  {spec}
+                </button>
+              ))}
+            </div>
           </div>
         </motion.div>
+      </div>
 
-        {/* Doctors Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12"
-        >
-          {doctorList.length > 0 ? (
-            doctorList.map((doctor) => (
-              <motion.div
-                key={doctor._id}
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 group"
-              >
-                <div className="relative">
-                  <img
-                    src={doctor.image}
-                    alt={doctor.name}
-                    className="w-full h-56 object-contain"
-                  />
-                  <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {doctor.specialization}
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                    {doctor.name}
-                  </h2>
-                  <div className="flex items-center mt-2 text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={i < Math.floor(doctor.rating) ? "text-yellow-400" : "text-gray-200"}
-                      />
-                    ))}
-                    <span className="ml-2 text-gray-600">{doctor.rating}</span>
-                  </div>
-                  <p className="mt-3 text-gray-600 line-clamp-2">{doctor.bio}</p>
-                  <Link
-                    href={`/view-doctor/${doctor._id}`}
-                    className="mt-4 w-full inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 transform group-hover:scale-[1.02]"
-                  >
-                    <FaUserMd className="mr-2" />
-                    View Profile
-                  </Link>
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <motion.div 
-              variants={itemVariants}
-              className="col-span-full text-center py-12"
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 8].map((i) => (
+              <div key={i} className="bg-white rounded-3xl h-[380px] animate-pulse border border-gray-100" />
+            ))}
+          </div>
+        ) : (
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              <FaStethoscope className="mx-auto text-6xl text-gray-300 mb-4" />
-              <p className="text-xl text-gray-500">No doctors found matching your criteria</p>
+              {doctorList.length > 0 ? (
+                doctorList.map((doctor) => (
+                  <motion.div
+                    key={doctor._id}
+                    layout
+                    variants={itemVariants}
+                    whileHover={{ y: -10 }}
+                    className="bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-blue-900/5 border border-gray-50 group hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500"
+                  >
+                    {/* Image Container */}
+                    <div className="relative h-48 overflow-hidden bg-white p-2">
+                      <img
+                        src={doctor.image || "https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small_2x/a-male-doctor-with-a-stethoscope-around-his-neck-isolated-on-white-background-generative-ai-photo.jpg"}
+                        alt={doctor.name}
+                        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                      <div className="absolute top-6 right-6">
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg border border-white/50">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className="font-bold text-gray-800">{doctor.rating || 4.8}</span>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-6 left-6">
+                        <div className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                          {doctor.specialization}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-3">
+                        <h2 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                          {doctor.name}
+                        </h2>
+                      </div>
+                      
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-3 text-gray-600">
+                          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                            <Award className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-gray-400 uppercase">Experience</p>
+                            <p className="font-bold text-gray-800">{doctor.experience || 0}+ Years</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-gray-600">
+                          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0">
+                            <DollarSign className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-gray-400 uppercase">Consultation Fee</p>
+                            <p className="font-bold text-gray-800">₹{doctor.fees || 500}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed italic border-l-2 border-blue-100 pl-3">
+                          "{doctor.bio || "Dedicated healthcare professional providing expert medical care."}"
+                        </p>
+                      </div>
+
+                      <Link
+                        href={`/view-doctor/${doctor._id}`}
+                        className="group relative flex items-center justify-center gap-2 w-full py-3 bg-gray-900 text-white rounded-xl font-bold overflow-hidden transition-all duration-300 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-200"
+                      >
+                        <span className="relative z-10 flex items-center gap-2 text-sm">
+                          View Profile
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      </Link>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="col-span-full bg-white/50 backdrop-blur-md rounded-[3rem] p-16 text-center border-2 border-dashed border-gray-200"
+                >
+                  <div className="w-24 h-24 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Stethoscope className="w-12 h-12" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">No Doctors Found</h3>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    We couldn't find any doctors matching your current filters. Try searching for something else or clearing your filters.
+                  </p>
+                  <button 
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedSpecialty("");
+                    }}
+                    className="mt-8 px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:shadow-lg transition-all"
+                  >
+                    Clear All Filters
+                  </button>
+                </motion.div>
+              )}
             </motion.div>
-          )}
-        </motion.div>
+          </AnimatePresence>
+        )}
       </div>
     </div>
   );
 };
 
-export default BrowseDoctors;
+export default BrowseDoctors;

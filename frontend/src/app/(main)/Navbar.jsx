@@ -1,104 +1,123 @@
-'use client';
-import React from 'react'
-import { FaStethoscope, FaBars, FaTimes } from 'react-icons/fa'
-import { IoLogOutOutline } from 'react-icons/io5'
-
-import { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Activity, Menu, X, ArrowRight, LogIn } from "lucide-react";
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-  return (
-    <div>
-        <h1> <div className="fixed top-0 left-0 right-0 z-50">
-              <nav className="bg-blue-600 text-white shadow-md">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="flex justify-between items-center py-4">
-                    {/* Logo */}
-                    <div className="flex items-center">
-                      <FaStethoscope className="text-2xl mr-2" />
-                      <span className="text-4xl font-bold">MediLink</span>
-                    </div>
-        
-                    {/* Search Bar */}
-                    {/* <div className="hidden md:flex flex-grow mx-8">
-                      <input
-                        type="text"
-                        placeholder="Search for doctors..."
-                        className="w-full px-4 py-2 rounded-lg bg-white text-black border border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
-                      />
-                    </div> */}
-        
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-8 items-center">
-                      <a href="/" className="hover:text-gray-200">
-                        Home
-                      </a>
-                      <a href="/browse-doctor" className="hover:text-gray-200">
-                        All Doctors
-                      </a>
-                      <a href="/doctor/manage-slot" className="hover:text-gray-200">
-                        Slots
-                      </a>
-                      <a href="/contact" className="hover:text-gray-200">
-                        Contact
-                      </a>
-                      <a href="/signup" className="hover:text-gray-200">
-                        Sign-Up
-                      </a>
-                      {/* <button className="flex items-center space-x-1 hover:text-gray-300">
-                        <IoLogOutOutline className="text-xl" />
-                        <span>Signup</span>
-                      </button> */}
-                    </div>
-        
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden flex items-center">
-                      <button
-                        onClick={toggleMobileMenu}
-                        className="text-2xl focus:outline-none"
-                      >
-                        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-                      </button>
-                    </div>
-                  </div>
-        
-                  {/* Mobile Menu */}
-                  {isMobileMenuOpen && (
-                    <div className="md:hidden space-y-4 mt-2">
-                      <div className="w-full px-4">
-                        <input
-                          type="text"
-                          placeholder="Search for doctors..."
-                          className="w-full px-4 py-2 rounded-lg bg-white text-black border border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
-                        />
-                      </div>
-                      <a href="/" className="block px-4 py-2 hover:bg-blue-700">
-                        Home
-                      </a>
-                      <a href="/doctors" className="block px-4 py-2 hover:bg-blue-700">
-                        All Doctors
-                      </a>
-                      <a href="/specializations" className="block px-4 py-2 hover:bg-blue-700">
-                        Specializations
-                      </a>
-                      <a href="/contact" className="block px-4 py-2 hover:bg-blue-700">
-                        Contact
-                      </a>
-                      {/* <button className="w-full text-left px-4 py-2 hover:bg-blue-700 flex items-center space-x-1">
-                        <IoLogOutOutline className="text-xl" />
-                        <span>Logout</span>
-                      </button> */}
-                    </div>
-                  )}
-                </div>
-              </nav>
-            </div></h1>
-    </div>
-  )
-}
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-export default Navbar
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/About" },
+    { name: "All Doctors", href: "/browse-doctor" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  return (
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm py-3"
+          : "bg-white/50 backdrop-blur-md py-5"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <motion.div
+              whileHover={{ rotate: 15 }}
+              className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:bg-blue-500 transition-colors"
+            >
+              <Activity className="w-6 h-6" />
+            </motion.div>
+            <span className="text-2xl font-extrabold text-gray-900 tracking-tight">
+              MediLink
+            </span>
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-gray-600 hover:text-blue-600 font-semibold text-sm tracking-wide transition-colors uppercase"
+              >
+                {link.name}
+              </Link>
+            ))}
+            <Link
+              href="/login"
+              className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-95 flex items-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              LOGIN
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-xl bg-gray-50 text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
+          >
+            <div className="px-4 pt-4 pb-8 space-y-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block px-4 py-3 rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition-all"
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div className="pt-4 px-4">
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full justify-center px-6 py-4 bg-blue-600 text-white font-bold rounded-2xl flex items-center gap-2 shadow-lg shadow-blue-500/20"
+                >
+                  <LogIn className="w-5 h-5" />
+                  LOGIN
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+};
+
+export default Navbar;
