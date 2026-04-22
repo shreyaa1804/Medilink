@@ -10,7 +10,8 @@ import {
   ArrowRight,
   TrendingUp,
   Award,
-  DollarSign
+  DollarSign,
+  X
 } from "lucide-react";
 
 const BrowseDoctors = () => {
@@ -125,7 +126,7 @@ const BrowseDoctors = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10"
+            className="text-lg md:text-xl text-gray-600  mx-auto "
           >
             Connect with verified healthcare experts across all specialties. 
             Quality care is just a simple search away.
@@ -144,41 +145,67 @@ const BrowseDoctors = () => {
           <div className="flex flex-col gap-8">
             {/* Search Input */}
             <div className="relative group">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors w-6 h-6" />
+              <motion.div 
+                animate={{ scale: searchQuery ? 0.9 : 1 }}
+                className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors"
+              >
+                <Search className="w-6 h-6" />
+              </motion.div>
+              
               <input
                 type="text"
-                placeholder="Search doctors by name, specialty, or hospital..."
+                placeholder="Search by name, hospital, or specialty..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-16 pr-6 py-5 rounded-2xl bg-gray-50 border-none focus:ring-4 focus:ring-blue-100 transition-all text-lg placeholder:text-gray-400"
+                className="w-full pl-16 pr-12 py-5 rounded-2xl bg-gray-50/50 border-2 border-transparent focus:border-blue-500/20 focus:bg-white focus:ring-8 focus:ring-blue-100/50 transition-all text-lg placeholder:text-gray-400 shadow-inner"
               />
+
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Specialty Chips */}
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setSelectedSpecialty("")}
-                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 border ${
-                  selectedSpecialty === "" 
-                  ? "bg-blue-600 text-white border-transparent shadow-lg shadow-blue-200" 
-                  : "bg-white text-gray-600 border-gray-100 hover:border-blue-200"
-                }`}
-              >
-                All Specialties
-              </button>
-              {specialties.map((spec) => (
+            {/* Specialty Chips & Popular Searches */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-400 mb-2">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <span>Popular Specialties</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 <button
-                  key={spec}
-                  onClick={() => setSelectedSpecialty(spec)}
-                  className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 border ${
-                    selectedSpecialty === spec 
-                    ? "bg-blue-600 text-white border-transparent shadow-lg shadow-blue-200" 
-                    : "bg-white text-gray-600 border-gray-100 hover:border-blue-200"
+                  onClick={() => setSelectedSpecialty("")}
+                  className={`px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 border-2 ${
+                    selectedSpecialty === "" 
+                    ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 scale-105" 
+                    : "bg-white text-gray-600 border-gray-100 hover:border-blue-200 hover:text-blue-600"
                   }`}
                 >
-                  {spec}
+                  All Doctors
                 </button>
-              ))}
+                {specialties.map((spec) => (
+                  <button
+                    key={spec}
+                    onClick={() => setSelectedSpecialty(spec)}
+                    className={`px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 border-2 ${
+                      selectedSpecialty === spec 
+                      ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 scale-105" 
+                      : "bg-white text-gray-600 border-gray-100 hover:border-blue-200 hover:text-blue-600"
+                    }`}
+                  >
+                    {spec}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
@@ -308,4 +335,4 @@ const BrowseDoctors = () => {
   );
 };
 
-export default BrowseDoctors;
+export default BrowseDoctors;
