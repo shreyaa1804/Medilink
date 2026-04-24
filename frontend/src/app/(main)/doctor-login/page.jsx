@@ -30,7 +30,9 @@ const Login = () => {
         toast.success('Login Successful');
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('doctor', JSON.stringify(response.data));
-        router.push('/doctor/doctor-dashboard');
+        // router.push('/doctor/doctor-dashboard');
+        const id=response.data._id;
+        router.push(`/dashboard/${id}`);
       } catch (err) {
         console.log(err);
         toast.error(err.response?.data?.message || 'Invalid credentials or server error');
@@ -155,4 +157,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login;
