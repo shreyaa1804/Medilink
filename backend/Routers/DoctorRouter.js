@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const router = express.Router();
 const verifyToken = require('../Middlewares/verifytoken');
-
+const cloudinary=require('../utils/cloudinary');
 
 router.post('/add', (req, res) => {
     console.log(req.body);
@@ -32,8 +32,8 @@ router.get('/getall', (req, res) => {
         });
 });
 
-router.get('/get-detail',(req, res) => {
-    Model.find()
+router.get('/get-detail',verifyToken,(req, res) => {
+    Model.findById(req.user._id)
         .then((result) => {
             res.status(200).json(result);
         }).catch((err) => {
@@ -77,15 +77,41 @@ router.delete('/delete/:id', (req, res) => {
 });
 
 //update
-router.put('/update', verifyToken, (req, res) => {
-    Model.findByIdAndUpdate(req.user._id, req.body, { new: true })
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).json(err);
-        });
+// router.put('/update', verifyToken, (req, res) => {
+//     Model.findByIdAndUpdate(req.user._id, req.body, { new: true })
+//         .then((result) => {
+//             res.status(200).json(result);
+//         }).catch((err) => {
+//             console.log(err);
+//             res.status(500).json(err);
+//         });
+// });
+
+router.put('/update', verifyToken, async (req, res) => {
+  try {
+    const doctorId = req.user._id;
+
+    const doctor = await Model.findById(doctorId);
+
+    // 🔥 DELETE OLD IMAGE (important)
+    if (doctor && req.body.public_id && doctor.public_id && req.body.public_id !== doctor.public_id) {
+      await cloudinary.uploader.destroy(doctor.public_id);
+    }
+
+    const updatedDoctor = await Model.findByIdAndUpdate(
+      doctorId,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json(updatedDoctor);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
+
 router.post('/authenticate', (req, res) => {
     Model.findOne(req.body)
         .then((result) => {
