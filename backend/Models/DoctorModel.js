@@ -9,7 +9,8 @@ const mySchema = new Schema({
     experience: { type: Number, required: true },
     bio: { type: String },
     image: {type: String},
-    avatar: { type: String },
+    public_id:{type:String},
+    // avatar: { type: String },
     contact: { type: String },
     address: { type: String },
     fees:{type: Number},
@@ -18,3 +19,22 @@ const mySchema = new Schema({
 
 
 module.exports = model('doctor', mySchema);
+// const { Schema, model } = require('../connection');
+
+// const doctorSchema = new Schema({
+//   userId: {
+//     type: Schema.Types.ObjectId,
+//     ref: "user",
+//     required: true
+//   },
+
+//   specialization: String,
+//   experience: Number,
+//   image: String,
+//   public_id: String,
+//   bio: String,
+//   address: String,
+//   contact: String
+// });
+
+// module.exports = model('doctor', doctorSchema);
