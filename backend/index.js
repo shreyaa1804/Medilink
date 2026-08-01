@@ -32,7 +32,7 @@ app.use('/appointment', AppointmentRouter);
 app.use('/Labtest', LabtestRouter);
 app.use('/utils', utilRouter);
 app.use('/review', ReviewRouter);
-
+// app.use('/admin', require('./Routers/admin'));
 
 app.post('/create-order', async (req, res) => {
     try {
@@ -57,7 +57,7 @@ app.post('/create-order', async (req, res) => {
 )
 // app.use('/send-otp', GenerateOTP);
 
-app.use(express.static('./static/uploads'));
+// app.use(express.static('./static/uploads'));
 
 // endpoint or route
 app.get('/', (req, res) => {
